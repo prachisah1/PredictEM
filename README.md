@@ -1,11 +1,7 @@
-This is a solid technical foundation for a project. To make it a "proper" README, I have refined the hierarchy, added clear code blocks, and used a cleaner layout to ensure it looks professional on GitHub.
 
-You can copy and paste the block below directly into your `README.md` file.
-
-```markdown
 # 🚑 PredictEM – Emergency Medical Response System
 
-**PredictEM** (SwiftCare) is an intelligent emergency response platform designed to assist healthcare professionals in managing critical situations with data-driven precision. The system integrates machine learning, optimization algorithms, and real-time routing to automate patient triage, hospital selection, and ambulance dispatch.
+**PredictEM** is an intelligent emergency response platform designed to assist healthcare professionals in managing critical situations with data-driven precision. The system integrates machine learning, optimization algorithms, and real-time routing to automate patient triage, hospital selection, and ambulance dispatch.
 
 ---
 
@@ -72,7 +68,7 @@ swiftcare/
 │   └── routing.py           # Dijkstra’s Algorithm
 ├── data/
 │   └── mock_patient_data.csv
-├── swiftcare-dashboard/     # React Frontend
+├── predictem-dashboard/     # React Frontend
 ├── generate_data.py         # Mock Data Generator
 ├── create_tables.py         # DB Initialization Script
 └── README.md
@@ -165,4 +161,4 @@ npm start
 
 ## 👩‍💻 Author
 
-**Prachi Sah** *Software Engineer | Machine Learning & Backend Systems*
+**Prachi Sah** *Software Engineer*
