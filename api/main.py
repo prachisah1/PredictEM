@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from modules.database import get_db
 from modules.models import TriageModel
 from modules.data_processing import load_data, preprocess
 from modules.allocation import allocate_resources
@@ -29,16 +32,13 @@ class Patient(BaseModel):
 
 
 @app.post("/triage")
-async def triage(patient: Patient):
-
-    db = SessionLocal()
+async def triage(patient: Patient, db: Session = Depends(get_db)):
 
     cache_key = f"{patient.heart_rate}_{patient.blood_pressure}_{patient.oxygen_level}_{patient.injury_severity}"
 
     cached = get_cache(cache_key)
 
     if cached:
-        db.close()
         return {"triage_category": cached, "source": "cache"}
 
     patient_data = [
@@ -54,11 +54,9 @@ async def triage(patient: Patient):
 
     save_patient(db, patient_data, result)
 
-    db.close()
-
     return {"triage_category": result, "source": "model"}
 
 @app.post("/allocate-resources")
-def allocate(patients: list[Patient]):
+async def allocate(patients: list[Patient]):
 
     return allocate_resources(patients)

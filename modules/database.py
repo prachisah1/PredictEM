@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 from modules.models_db import PatientRecord
 
 DATABASE_URL = "postgresql://postgres:admin@localhost:5432/predictem"
@@ -9,6 +8,13 @@ engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) 
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+        
 def save_patient(db, patient_data, triage):
 
     record = PatientRecord(
