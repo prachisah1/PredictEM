@@ -8,9 +8,18 @@ from modules.models import TriageModel
 from modules.data_processing import load_data, preprocess
 from modules.allocation import allocate_resources
 from modules.database import SessionLocal, save_patient
+from modules.routing import find_nearest_hospital
 from modules.caching import get_cache, set_cache
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # -------- TRAIN MODEL ON STARTUP --------
 
 data = load_data("data/mock_patient_data.csv")
@@ -60,3 +69,10 @@ async def triage(patient: Patient, db: Session = Depends(get_db)):
 async def allocate(patients: list[Patient]):
 
     return allocate_resources(patients)
+
+@app.get("/dispatch-ambulance")
+async def dispatch():
+
+    result = find_nearest_hospital()
+
+    return result
