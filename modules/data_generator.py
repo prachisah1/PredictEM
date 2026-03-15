@@ -22,6 +22,10 @@ def generate_patient_data(n=1000):
         else:
             triage = "Green"
 
+        # add 10% noise
+        if random.random() < 0.1:
+            triage = random.choice(["Red", "Yellow", "Green"])
+
         data.append([
             heart_rate,
             blood_pressure,

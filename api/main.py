@@ -4,8 +4,8 @@ from pydantic import BaseModel
 from modules.models import TriageModel
 from modules.data_processing import load_data, preprocess
 from modules.allocation import allocate_resources
-
-
+from modules.database import SessionLocal, save_patient
+from modules.caching import get_cache, set_cache
 app = FastAPI()
 
 # -------- TRAIN MODEL ON STARTUP --------
@@ -29,7 +29,17 @@ class Patient(BaseModel):
 
 
 @app.post("/triage")
-def triage(patient: Patient):
+async def triage(patient: Patient):
+
+    db = SessionLocal()
+
+    cache_key = f"{patient.heart_rate}_{patient.blood_pressure}_{patient.oxygen_level}_{patient.injury_severity}"
+
+    cached = get_cache(cache_key)
+
+    if cached:
+        db.close()
+        return {"triage_category": cached, "source": "cache"}
 
     patient_data = [
         patient.heart_rate,
@@ -40,8 +50,13 @@ def triage(patient: Patient):
 
     result = model.predict(patient_data)
 
-    return {"triage_category": result}
+    set_cache(cache_key, result)
 
+    save_patient(db, patient_data, result)
+
+    db.close()
+
+    return {"triage_category": result, "source": "model"}
 
 @app.post("/allocate-resources")
 def allocate(patients: list[Patient]):

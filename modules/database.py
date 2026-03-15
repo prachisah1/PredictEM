@@ -1,27 +1,26 @@
-from sqlalchemy import create_engine, Column, Integer, Float, String
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-Base = declarative_base()
+from modules.models_db import PatientRecord
 
-class Patient(Base):
+DATABASE_URL = "postgresql://postgres:admin@localhost:5432/predictem"
 
-    __tablename__ = "patients"
+engine = create_engine(DATABASE_URL)
 
-    id = Column(Integer, primary_key=True)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) 
 
-    heart_rate = Column(Float)
+def save_patient(db, patient_data, triage):
 
-    blood_pressure = Column(Float)
+    record = PatientRecord(
+        heart_rate=patient_data[0],
+        blood_pressure=patient_data[1],
+        oxygen_level=patient_data[2],
+        injury_severity=patient_data[3],
+        triage_category=triage
+    )
 
-    oxygen_level = Column(Float)
+    db.add(record)
+    db.commit()
+    db.refresh(record)
 
-    injury_severity = Column(Integer)
-
-    triage = Column(String)
-
-
-engine = create_engine("sqlite:///data/patients.db")
-
-Session = sessionmaker(bind=engine)
-
-Base.metadata.create_all(engine)
+    return record
