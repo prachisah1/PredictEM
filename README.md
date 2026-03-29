@@ -53,7 +53,7 @@ graph TD
 ## 📂 Project Structure
 
 ```text
-swiftcare/
+PredictEm/
 ├── api/
 │   └── main.py              # FastAPI Entry Point
 ├── modules/
@@ -83,8 +83,8 @@ swiftcare/
 
 ```bash
 # Clone the repository
-git clone [https://github.com/your-username/swiftcare.git](https://github.com/your-username/swiftcare.git)
-cd swiftcare
+git clone [https://github.com/your-username/PredictEm.git](https://github.com/your-username/PredictEm.git)
+cd PredictEm
 
 # Create and activate virtual environment
 python -m venv venv
@@ -99,10 +99,10 @@ pip install -r requirements.txt
 
 ```bash
 # Run Redis
-docker run -d -p 6379:6379 --name swift-redis redis
+docker run -d -p 6379:6379 --name predictem-redis redis
 
 # Run PostgreSQL
-docker run -d -p 5432:5432 --name swift-postgres \
+docker run -d -p 5432:5432 --name predictem-postgres \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=admin \
   -e POSTGRES_DB=predictem \
@@ -120,7 +120,7 @@ python create_tables.py
 uvicorn api.main:app --reload --port 8001
 
 # Start Frontend
-cd swiftcare-dashboard
+cd PredictEm-dashboard
 npm install
 npm start
 
